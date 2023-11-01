@@ -1,0 +1,10 @@
+/*
+ * sortware_timer.c
+ *
+ *  Created on: Nov 1, 2023
+ *      Author: DELL
+ */
+
+#include "sortware_timer.h"
+
+int timer1_counter = 0;
