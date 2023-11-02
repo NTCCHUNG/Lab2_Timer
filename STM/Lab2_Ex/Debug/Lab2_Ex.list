@@ -128,8 +128,8 @@ int main(void)
  800016e:	681b      	ldr	r3, [r3, #0]
  8000170:	2b01      	cmp	r3, #1
  8000172:	d1fb      	bne.n	800016c <main+0x20>
-		  setTimer1(100);
- 8000174:	2064      	movs	r0, #100	; 0x64
+		  setTimer1(200);
+ 8000174:	20c8      	movs	r0, #200	; 0xc8
  8000176:	f000 f8d5 	bl	8000324 <setTimer1>
 		  HAL_GPIO_TogglePin(LED_RED_GPIO_Port, LED_RED_Pin);
  800017a:	2120      	movs	r1, #32
