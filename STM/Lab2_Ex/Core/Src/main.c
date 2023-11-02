@@ -52,6 +52,7 @@ static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 void display7SEG(int value);
+void turnOn7SEG (int *value);
 void machine(int status);
 /* USER CODE END PFP */
 
@@ -97,12 +98,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   setTimer1(100);
   setTimer2(50);
-  int status = 1;
-  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 0);
-  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 1);
-  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
-  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
-  display7SEG(status++);
+  setTimer3(100);
+  int status = 0;
+  turnOn7SEG(&status);
+  display7SEG(status);
   while (1)
   {
 	  if (timer1_flag == 1) {
@@ -112,37 +111,12 @@ int main(void)
 
 	  if (timer2_flag == 1) {
 		  setTimer2(50);
-			display7SEG(status);
-			switch (status) {
-			case 1:
-				HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 0);
-				HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 1);
-				HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
-				HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
-				status = 2;
-				break;
-			case 2:
-				HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 1);
-				HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 0);
-				HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
-				HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
-				status = 3;
-				break;
-			case 3:
-				HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 1);
-				HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 1);
-				HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 0);
-				HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
-				status = 0;
-				break;
-			case 0:
-				HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 1);
-				HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 1);
-				HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
-				HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 0);
-				status = 1;
-				break;
-			}
+		  turnOn7SEG(&status);
+		  display7SEG(status);
+	  }
+	  if (timer3_flag == 1) {
+		  setTimer3(100);
+		  HAL_GPIO_TogglePin(D0T_GPIO_Port, D0T_Pin);
 
 	  }
     /* USER CODE END WHILE */
@@ -249,17 +223,17 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, LED_RED_Pin|EN0_Pin|EN1_Pin|EN2_Pin
-                          |EN3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, D0T_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, SEG0_Pin|SEG1_Pin|SEG2_Pin|SEG3_Pin
                           |SEG4_Pin|SEG5_Pin|SEG6_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : LED_RED_Pin EN0_Pin EN1_Pin EN2_Pin
-                           EN3_Pin */
-  GPIO_InitStruct.Pin = LED_RED_Pin|EN0_Pin|EN1_Pin|EN2_Pin
-                          |EN3_Pin;
+  /*Configure GPIO pins : D0T_Pin LED_RED_Pin EN0_Pin EN1_Pin
+                           EN2_Pin EN3_Pin */
+  GPIO_InitStruct.Pin = D0T_Pin|LED_RED_Pin|EN0_Pin|EN1_Pin
+                          |EN2_Pin|EN3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -396,6 +370,39 @@ void display7SEG(int value) {
 		HAL_GPIO_WritePin(SEG4_GPIO_Port, SEG4_Pin, GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(SEG5_GPIO_Port, SEG5_Pin, GPIO_PIN_RESET);
 		break;
+	}
+}
+
+void turnOn7SEG(int* value) {
+	switch (*value) {
+	case 0:
+		HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 0);
+		HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 1);
+		HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
+		HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
+		*value = 1;
+		break;
+	case 1:
+			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 1);
+			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 0);
+			HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
+			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
+			*value = 2;
+			break;
+	case 2:
+			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 1);
+			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 1);
+			HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 0);
+			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 1);
+			*value = 3;
+			break;
+	case 3:
+			HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, 1);
+			HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, 1);
+			HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, 1);
+			HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, 0);
+			*value = 0;
+			break;
 	}
 }
 /* USER CODE END 4 */
