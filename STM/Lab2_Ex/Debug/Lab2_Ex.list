@@ -171,8 +171,8 @@ int main(void)
  80001b6:	681b      	ldr	r3, [r3, #0]
  80001b8:	2b01      	cmp	r3, #1
  80001ba:	d10a      	bne.n	80001d2 <main+0x86>
-		  setTimer2(50);
- 80001bc:	2032      	movs	r0, #50	; 0x32
+		  setTimer2(25);
+ 80001bc:	2019      	movs	r0, #25
  80001be:	f000 fb81 	bl	80008c4 <setTimer2>
 		  update7SEG(index_led++);
  80001c2:	4b0d      	ldr	r3, [pc, #52]	; (80001f8 <main+0xac>)

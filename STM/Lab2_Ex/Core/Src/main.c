@@ -116,7 +116,7 @@ int main(void)
 		  index_led = 0;
 	  }
 	  if (timer2_flag == 1) {
-		  setTimer2(50);
+		  setTimer2(25);
 		  update7SEG(index_led++);
 	  }
 	  if (timer3_flag == 1) {
