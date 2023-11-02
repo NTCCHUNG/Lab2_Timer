@@ -45,7 +45,8 @@ TIM_HandleTypeDef htim2;
 /* USER CODE BEGIN PV */
 const int MAX_LED = 4 ;
 int index_led = 0 ;
-int led_buffer[4] = {1,2,3,4};
+int led_buffer[4] = {1,5,0,8};
+int hour = 15 , minute = 8 , second = 50;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -57,6 +58,8 @@ void display7SEG(int value);
 void turnOn7SEG (int *value);
 void machine(int status);
 void update7SEG(int index);
+void updateClockBuffer();
+void digitalClock();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -118,6 +121,8 @@ int main(void)
 	  if (timer2_flag == 1) {
 		  setTimer2(25);
 		  update7SEG(index_led++);
+		  digitalClock();
+		  updateClockBuffer();
 	  }
 	  if (timer3_flag == 1) {
 		  setTimer3(100);
@@ -451,6 +456,27 @@ void update7SEG(int index){
 	}
 }
 
+void updateClockBuffer() {
+	led_buffer[0] = hour / 10;
+	led_buffer[1] = hour % 10;
+	led_buffer[2] = minute / 10;
+	led_buffer[3] = minute % 10;
+}
+
+void digitalClock() {
+	second ++;
+	if ( second >= 60) {
+		second = 0;
+		minute ++;
+	}
+	if( minute >= 60) {
+		minute = 0;
+		hour ++;
+	}
+	if( hour >=24) {
+		hour = 0;
+	}
+}
 /* USER CODE END 4 */
 
 /**
