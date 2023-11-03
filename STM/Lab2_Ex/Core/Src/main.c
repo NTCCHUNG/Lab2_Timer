@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "sortware_timer.h"
+//#include "matrix.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,6 +109,9 @@ int main(void)
   int status = 0;
   turnOn7SEG(&status);
   display7SEG(status);
+  HAL_GPIO_WritePin(ENM0_GPIO_Port, ENM0_Pin, 1);
+  HAL_GPIO_WritePin(ROW0_GPIO_Port, ROW0_Pin, 1);
+  int index_led_matrix = 0;
   while (1)
   {
 	  if (timer1_flag == 1) {
@@ -118,11 +122,17 @@ int main(void)
 	  if (index_led >= MAX_LED) {
 		  index_led = 0;
 	  }
+	  if (index_led_matrix >= 8) {
+		  index_led_matrix = 0;
+	  }
 	  if (timer2_flag == 1) {
-		  setTimer2(25);
+		  setTimer2(10);
 		  update7SEG(index_led++);
 		  digitalClock();
 		  updateClockBuffer();
+		  updateLEDMatrix(index_led_matrix);
+		  index_led_matrix++;
+
 	  }
 	  if (timer3_flag == 1) {
 		  setTimer3(100);
