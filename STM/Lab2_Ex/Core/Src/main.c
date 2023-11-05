@@ -126,7 +126,7 @@ int main(void)
 		  index_led_matrix = 0;
 	  }
 	  if (timer2_flag == 1) {
-		  setTimer2(10);
+		  setTimer2(2);
 		  update7SEG(index_led++);
 		  digitalClock();
 		  updateClockBuffer();
